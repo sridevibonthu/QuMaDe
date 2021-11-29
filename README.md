@@ -3,11 +3,11 @@
 * To propose a new way of dataset generation for depth prediction and foreground mask generation tasks.
 ![](https://github.com/Lakshman511/QuMaDe/blob/master/Images/teaser.gif)
 * Two car datasets:
-    1. Generated Synthetically
-    2. Any standard dataset
+    1. Synthetic Dataset
+    2. Standard dataset
 * Two instances of a model
-    1. One instance will be trained on Synthetically generated dataset
-    2. Other will be trained on Generated standard dataset
+    1. instance1 will be trained on Synthetic dataset
+    2. instance2 will be trained on Standard dataset
 * Quantitative measures to compare the performance of the two instances of the model
     * Considering threshold accuracies(th1, th2, th3), rmse, absolute relative error, log1o relative error from [here](https://github.com/ialhashim/DenseDepth/blob/master/utils.py)
 ## Steps to train a model on a dataset
