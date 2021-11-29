@@ -7,3 +7,24 @@
    * DATA_PATH specifies the path to the folder that contains training images, masks, depth images
    * LIB_PATH specifies the path to [this](https://github.com/Lakshman511/QuMaDe/tree/master/EVALibrary/EVA4) library.
    * Dataset stats (mean, stddev) can be calculated by following [this](https://github.com/Lakshman511/QuMaDe/blob/master/QuMaDe_data_statistics.ipynb) notebook.
+
+
+### Data
+```
+|---DATA_PATH
+    |---depth                  # contains 400k depth images
+        |---img000001.jpg
+        |---img000002.jpg
+        |---img000003.jpg
+        ....
+    |---images                # contains 400k RGB images corresponding to the above depth images
+        |---img000001.jpg
+        |---img000002.jpg
+        |---img000003.jpg
+        ....
+    |---masks                 # contains 400k masks for the above RGB images
+        |---img000001.jpg
+        |---img000002.jpg
+        |---img000003.jpg
+        ....
+```
