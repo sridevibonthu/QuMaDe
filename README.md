@@ -1,7 +1,6 @@
 # QuMaDe
 ## Idea
 * To propose a new way of dataset generation for depth prediction and foreground mask generation tasks.
-![](https://github.com/Lakshman511/QuMaDe/blob/master/Images/teaser.gif)
 * Two car datasets:
     1. Synthetic Dataset
     2. Standard dataset
