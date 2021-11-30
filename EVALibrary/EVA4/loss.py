@@ -118,6 +118,7 @@ def compute_errors1(gt, pred):
     #log_10 = (np.abs(np.log10(gt)-np.log10(pred))).sum()
     return thresh[0],thresh[1],thresh[2], rmse
 def compute_errors(gt, pred):
+    print(np.min(gt),np.max(pred))
     theta = 0.00001
     gt = gt+theta
     pred = pred+theta

@@ -8,7 +8,11 @@ from loss import ssim, msssim,compute_errors
 from utils import saveresults, show
 import gc
 import numpy as np
+from tqdm import tqdm
 
+
+def tostr(l):
+  return [str(i) for i in l]
 
 
 # https://github.com/tqdm/tqdm
@@ -27,7 +31,7 @@ class Train:
 
   def run(self):
     self.model.train()
-    pbar = tqdm_notebook(enumerate(self.dataloader))
+    pbar = tqdm(enumerate(self.dataloader))
     for batch_idx, data in pbar:
       # get samples
       fgbg, mask, depth = data['fgbg'].to(self.model.device), data['mask'].to(self.model.device), data['depth'].to(self.model.device)
@@ -37,10 +41,7 @@ class Train:
       
       
       mask_pred, depth_pred = self.model(fgbg)
-      print("Mask",mask.min(),mask.max())
-      print("Depth",depth.min(),depth.max())
-      print("Mask pred",mask_pred.min(),mask_pred.max())
-      print("Depth pred",depth_pred.min(),depth_pred.max())  
+     
 
       # Calculate loss
       if self.criterion1 is not None:
@@ -112,14 +113,16 @@ class Train:
       if self.scheduler:
         self.scheduler.step()
     predictions1 = np.stack(self.images_data[2], axis=0)
-    testSetDepths1 = np.stack(self.images_data[0], axis=0)
-    predictions2 = np.stack(self.images_data[1], axis=0)
-    testSetDepths2 = np.stack(self.images_data[3], axis=0)
-    e1 = compute_errors(predictions1, testSetDepths1)
-    e2 = compute_errors(predictions2, testSetDepths2)
+    trainSetDepths1 = np.stack(self.images_data[0], axis=0)
+    predictions2 = np.stack(self.images_data[3], axis=0)
+    trainSetDepths2 = np.stack(self.images_data[1], axis=0)
+    e1 = compute_errors(trainSetDepths1, predictions1)
+    e2 = compute_errors(trainSetDepths2, predictions2)
     print("train Quantitative measures (a1, a2, a3, abs_rel, rmse, log_10)  1.mask 2.depth")
     print(*e1)
     print(*e2)
+    with open(f"./Metrices/{self.model.name}_training.txt","a") as file:
+      file.write(" ".join(tostr(e1))+"\n"+" ".join(tostr(e2))+"\n")
 	
 class Test:
   def __init__(self, model, dataloader, stats, scheduler=None, criterion1=None, criterion2=None, tb=None):
@@ -137,7 +140,7 @@ class Test:
     self.model.eval()
     with torch.no_grad():
         
-        for batch_idx, data in enumerate(self.dataloader):
+        for batch_idx, data in tqdm(enumerate(self.dataloader)):
             fgbg, mask, depth =  data['fgbg'].to(self.model.device), data['mask'].to(self.model.device), data['depth'].to(self.model.device)
             
             mask_pred, depth_pred = self.model(fgbg)
@@ -182,13 +185,16 @@ class Test:
               self.scheduler.step(self.loss)
     predictions1 = np.stack(self.images_data[2], axis=0)
     testSetDepths1 = np.stack(self.images_data[0], axis=0)
-    predictions2 = np.stack(self.images_data[1], axis=0)
-    testSetDepths2 = np.stack(self.images_data[3], axis=0)
-    e1 = compute_errors(predictions1, testSetDepths1)
-    e2 = compute_errors(predictions2, testSetDepths2)
+    predictions2 = np.stack(self.images_data[3], axis=0)
+    testSetDepths2 = np.stack(self.images_data[1], axis=0)
+    e1 = compute_errors(testSetDepths1, predictions1)
+    e2 = compute_errors(testSetDepths2, predictions2)
     print("test Quantitative measures (a1, a2, a3, abs_rel, rmse, log_10)  1.mask 2.depth")
     print(*e1)
     print(*e2)
+    with open(f"./Metrices/{self.model.name}_testing.txt","a") as file:
+      file.write(" ".join(tostr(e1))+"\n"+" ".join(tostr(e2))+"\n")
+      
             
 class ModelTrainer:
   def __init__(self, model, optimizer, train_loader, test_loader, statspath, scheduler=None, batch_scheduler=False, criterion1=None, criterion2=None, L1lambda = 0):

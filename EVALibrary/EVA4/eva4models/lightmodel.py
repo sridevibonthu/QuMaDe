@@ -158,10 +158,11 @@ class S15Model(Net):
     self.encoder = Encoder()
     self.decoder1 = MaskDecoder()
     self.decoder2 = DepthDecoder()
+    self.sigmoid = nn.Sigmoid()
     self.init_params()
         
   def forward(self, x):
     e = self.encoder(x)
     mask = self.decoder1(*e)
     depth = self.decoder2(*e)
-    return(mask, depth)
+    return(self.sigmoid(mask), self.sigmoid(depth))
