@@ -1,6 +1,14 @@
 # QuMaDe
-* Sample files to train a model for predicting mask as well as depth images on a dataset.
-* .ipynb notebooks are used for traininng instead of training in the terminal because itcan be interactive. 
+## Idea
+* To propose a new way of dataset generation for depth prediction and foreground mask generation tasks.
+* Two car datasets:
+    1. Synthetic Dataset
+    2. Standard dataset
+* Two instances of a model
+    1. instance1 will be trained on Synthetic dataset
+    2. instance2 will be trained on Standard dataset
+* Quantitative measures to compare the performance of the two instances of the model
+    * Considering threshold accuracies(th1, th2, th3), rmse, absolute relative error, log1o relative error from [here](https://github.com/ialhashim/DenseDepth/blob/master/utils.py)
 ## Steps to train a model on a dataset
 1. [This](https://github.com/Lakshman511/QuMaDe/blob/master/training.ipynb) notebook can be used for training the model.
 2. We need to change the constants in the first cell of the above notebook
@@ -43,3 +51,5 @@
    * But we can also...
       * Define the range of the scale that each foreground image can have
       * Follow a semantic placement of foreground on background using segmentation maps of background Images.
+      
+ ## Part2 - Standard Dataset
