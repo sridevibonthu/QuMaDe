@@ -96,7 +96,7 @@ def msssim(img1, img2, window_size=11, size_average=True, val_range=None, normal
     output = torch.prod(pow1[:-1] * pow2[-1])
     return output
 # Modifying this a little bit. Intension : Need not to store the images for log time in RAM
-def compute_errors1(gt, pred):
+def compute_errors(gt, pred):
     # Let's add a theta value 0.0000000001 to avoid log(0) and division by 0 errors
     #thresh = np.maximum((gt / pred), (pred / gt))
     # a1 = (thresh < 1.25   ).mean()
@@ -110,14 +110,16 @@ def compute_errors1(gt, pred):
       high[high==0]=0.10
       thresh.append(((pred>=low)&(pred<=high)).sum())
     #abs_rel = np.mean(np.abs(gt - pred) / gt)
+    abs_rel = np.sum(np.abs(gt - pred) / gt)
     rmse = (gt - pred) ** 2
     #rmse = np.sqrt(rmse.mean())
     rmse = rmse.sum()
     #log_10 = (np.abs(np.log10(gt)-np.log10(pred))).mean()
    
-    #log_10 = (np.abs(np.log10(gt)-np.log10(pred))).sum()
-    return thresh[0],thresh[1],thresh[2], rmse
-def compute_errors(gt, pred):
+    log_10 = (np.abs(np.log10(gt)-np.log10(pred))).sum()
+    return thresh[0],thresh[1],thresh[2], abs_rel, rmse, log_10
+
+def compute_errors1(gt, pred):
     print(np.min(gt),np.max(pred))
     theta = 0.00001
     gt = gt+theta
